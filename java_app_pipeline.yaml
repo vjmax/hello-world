@@ -5,7 +5,7 @@ pipelines:
     materials:
       - git: 
           name: JavaAppRepo
-          url: <git_repository_url>
+          url: https://github.com/vjmax/hello-world.git
           branch: main
           auto_update: true
 

@@ -1,0 +1,35 @@
+---
+format_version: 3
+pipelines:
+  - name: JavaAppPipeline
+    materials:
+      - git: 
+          name: JavaAppRepo
+          url: <git_repository_url>
+          branch: main
+          auto_update: true
+
+    stages:
+      - name: Build
+        jobs:
+          - name: BuildJob
+            working_directory: /var/lib/go-agent/pipelines/Build_Demo_Pipeline
+            environment_variables:
+              MAVEN_OPTS: -Dmaven.repo.local=/var/go/.m2/repository
+            tasks:
+              - exec:
+                  command: mvn clean package
+                  working_directory: /var/lib/go-agent/pipelines/Build_Demo_Pipeline
+
+      - name: Deploy
+        jobs:
+          - name: DeployJob
+            environment_variables:
+              TOMCAT_HOME: /opt/tomcat
+            tasks:
+              - exec:
+                  command: |
+                    cp /var/lib/go-agent/pipelines/Build_Demo_Pipeline/target $TOMCAT_HOME/webapps/
+                    $TOMCAT_HOME/bin/catalina.sh stop
+                    sleep 5
+                    $TOMCAT_HOME/bin/catalina.sh start

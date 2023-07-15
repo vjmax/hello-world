@@ -31,3 +31,21 @@ pipelines:
                 - install
                 command: mvn
                 run_if: passed
+    - Prod-Deploy-stage:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: true
+        jobs:
+          Prod-deployy-job:
+            timeout: 0
+            resources:
+            - Tomcat1
+            tasks:
+            - exec:
+                arguments:
+                - tomcat7:deploy
+                command: mvn
+                run_if: passed

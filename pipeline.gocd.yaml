@@ -6,19 +6,11 @@ pipelines:
     materials:
       mygit:
         git: https://github.com/vjmax/hello-world.git
-        branch: develop
-    environment_variables:
-      DOCKER_REGISTRY: 479580041174.dkr.ecr.ap-south-1.amazonaws.com
-      IMAGE_NAME: myawesome-service-1
+        branch: master
     stages:
     - build:
         clean_workspace: true
         jobs:
-          build:
-            elastic_profile_id: myawesome-java-8
-            artifacts:
-            - build:
-                source: image_ref
             tasks:
             - exec:
                 command: bash

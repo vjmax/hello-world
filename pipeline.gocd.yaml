@@ -1,35 +1,27 @@
----
 format_version: 3
+
 pipelines:
-  - name: JavaAppPipeline
+  myawesome-service-1-build-dev:
+    group: TEAMNAME
     materials:
-      - git: 
-          name: JavaAppRepo
-          url: https://github.com/vjmax/hello-world.git
-          branch: main
-          auto_update: true
-
+      mygit:
+        git: https://github.com/vjmax/hello-world.git
+        branch: develop
+    environment_variables:
+      DOCKER_REGISTRY: 479580041174.dkr.ecr.ap-south-1.amazonaws.com
+      IMAGE_NAME: myawesome-service-1
     stages:
-      - name: Build
+    - build:
+        clean_workspace: true
         jobs:
-          - name: BuildJob
-            working_directory: /var/lib/go-agent/pipelines/Build_Demo_Pipeline
-            environment_variables:
-              MAVEN_OPTS: -Dmaven.repo.local=/var/go/.m2/repository
+          build:
+            elastic_profile_id: myawesome-java-8
+            artifacts:
+            - build:
+                source: image_ref
             tasks:
-              - exec:
-                  command: mvn clean package
-                  working_directory: /var/lib/go-agent/pipelines/Build_Demo_Pipeline
-
-      - name: Deploy
-        jobs:
-          - name: DeployJob
-            environment_variables:
-              TOMCAT_HOME: /opt/tomcat
-            tasks:
-              - exec:
-                  command: |
-                    cp /var/lib/go-agent/pipelines/Build_Demo_Pipeline/target $TOMCAT_HOME/webapps/
-                    $TOMCAT_HOME/bin/catalina.sh stop
-                    sleep 5
-                    $TOMCAT_HOME/bin/catalina.sh start
+            - exec:
+                command: bash
+                arguments:
+                - "-c"
+                - "mvn clean package"

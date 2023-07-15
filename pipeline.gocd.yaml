@@ -1,19 +1,33 @@
-format_version: 3
-
+format_version: 10
 pipelines:
-  myawesome-service-1-build-dev:
-    group: TEAMNAME
+  prod-java-pipeline:
+    group: defaultGroup
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
     materials:
-      mygit:
+      git-228b45a:
         git: https://github.com/vjmax/hello-world.git
+        shallow_clone: false
+        auto_update: true
         branch: master
     stages:
-    - build:
-        clean_workspace: true
+    - prod-Build-stage:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
         jobs:
+          prod-Build-job:
+            timeout: 0
+            resources:
+            - Tomcat2
             tasks:
             - exec:
-                command: bash
                 arguments:
-                - "-c"
-                - "mvn clean package"
+                - clean
+                - install
+                command: mvn
+                run_if: passed

@@ -24,7 +24,7 @@ pipelines:
           prod-Build-job:
             timeout: 0
             resources:
-            - Tomcat1
+            - Tomcat2
             tasks:
             - exec:
                 arguments:
@@ -43,7 +43,7 @@ pipelines:
           Prod-deployy-job:
             timeout: 0
             resources:
-            - Tomcat1
+            - Tomcat2
             tasks:
             - exec:
                 arguments:
